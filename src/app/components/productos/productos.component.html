@@ -1,0 +1,116 @@
+<h3>{{Titulo}} <small>{{TituloAccionABMC[AccionABMC]}}</small></h3>
+
+  <!-- Boton de alta -->
+  <div class="row justify-content-center">
+    <button type="button" class="btn btn-primary" (click)="Alta()">
+      <span class="fas fa-plus"> </span>
+      Alta
+    </button>
+  </div>
+<hr>
+<!-- Tabla de resutados de busqueda-->
+<div id="divTablaResultados" *ngIf="AccionABMC == 'L' &&  Productos?.length > 0">
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th class="text-center">Id Producto</th>
+        <th class="text-center">Nombre</th>
+        <th class="text-center">Fecha de Alta</th>
+        <th class="text-center">Stock</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let prod of Productos">
+        <td>{{prod.ProductoID}}</td>
+        <td>{{prod.ProductoNombre}}</td>
+        <td>{{prod.ProductoFechaAlta| date:'dd/MM/yyyy'}}</td>
+        <td class="text-right">{{prod.ProductoStock}}</td>
+      </tr>
+    </tbody>
+  </table>  
+</div>
+
+<!-- Mensaje de aviso No se encontraron registros-->
+<div id="divMsjFormBusqueda" class="alert alert-info" *ngIf="AccionABMC == 'L' && Productos?.length== 0">
+  <span class="fas fa-exclamation-sign"></span>{{Mensajes['SD']}}
+</div>
+
+<!-- Registro en Alta-->
+<form name="FormAlta" *ngIf="AccionABMC == 'A'" [formGroup]="FormAlta">
+    <!--campo nombre-->
+    <div class="form-group row">
+      <label class="col-form-label col-sm-2 offset-sm-2" for="ProductoNombre">
+        Nombre <span class="text-danger">*</span>
+      </label>
+      <div class="col-sm-6">
+        <input type="text" class="form-control text-uppercase" formControlName="ProductoNombre" [ngClass]="{'is-invalid':(FormAlta.controls.ProductoNombre.touched || submitted) && FormAlta.controls.ProductoNombre.errors}" />
+        <span class="text-danger" *ngIf="(FormAlta.controls.ProductoNombre.touched || submitted) && FormAlta.controls.ProductoNombre.errors && FormAlta.controls.ProductoNombre.errors.required ">
+          Dato requerido
+        </span>
+        <span class="text-danger" *ngIf="(FormAlta.controls.ProductoNombre.touched || submitted) && (FormAlta.controls.ProductoNombre.errors?.maxlength)">Dato texto, maximo 50 caracteres</span>
+      </div>
+    </div>
+
+    <!--campo fechaalta-->
+    <div class="form-group row">
+    <label class="col-form-label col-sm-2 offset-sm-2" for="ProductoFechaAlta">
+      Fecha de alta <span class="text-danger">*</span>
+    </label>
+    <div class="col-sm-6">
+      <input
+        class="form-control"
+        name="ProductoFechaAlta"
+        formControlName="ProductoFechaAlta"
+        [ngClass]="{'is-invalid': (FormAlta.controls.ProductoFechaAlta.touched || submitted)  && FormAlta.controls.ProductoFechaAlta.errors}"
+      />
+      <span class="text-danger" *ngIf="(FormAlta.controls.ProductoFechaAlta.touched || submitted) && FormAlta.controls.ProductoFechaAlta.errors && FormAlta.controls.ProductoFechaAlta.errors.required ">
+        Dato requerido
+      </span>
+      <span class="text-danger" *ngIf="(FormAlta.controls.ProductoFechaAlta.touched || submitted) && FormAlta.controls.ProductoFechaAlta.errors?.pattern">
+        Dato fecha, formato dd/mm/aaaa.
+      </span>
+    </div>
+  </div>
+
+    <!--campo stock-->
+    <div class="form-group row">
+      <label class="col-form-label col-sm-2 offset-sm-2" for="Stock">
+        Stock <span class="text-danger">*</span>
+      </label>
+      <div class="col-sm-6">
+        <input
+          type="text"
+          name="ProductoStock"
+          class="form-control"
+          formControlName="ProductoStock"
+          [ngClass]="{'is-invalid': (FormAlta.controls.ProductoStock.touched || submitted)  && FormAlta.controls.ProductoStock.errors}"
+        />
+        <span class="text-danger" *ngIf="(FormAlta.controls.ProductoStock.touched || submitted) && FormAlta.controls.ProductoStock.errors && FormAlta.controls.ProductoStock.errors.required ">
+          Dato requerido
+        </span>
+        <span class="text-danger" *ngIf="(FormAlta.controls.ProductoStock.touched || submitted) && FormAlta.controls.ProductoStock.errors?.pattern">
+          Dato numérico.
+        </span>
+      </div>
+    </div>
+
+  <!-- Botones Grabar, Cancelar/Volver' -->
+  <div class="row justify-content-center">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="Grabar()">
+      <span class="fas fa-check"></span> Grabar
+    </button>
+    &nbsp;
+    <button type="button" class="btn btn-warning" (click)="Cancelar()">
+      <span class="fas fa-undo"></span>
+      Cancelar
+    </button>
+  </div>
+
+  <!--Aviso de revisar los datos ingresados...-->
+  <div id="divMsjFormRegistro" class="row alert alert-danger" *ngIf="submitted && FormAlta.invalid">
+    <span class="fas fa-exclamation-sign"></span>{{Mensajes['RD']}}
+  </div>
+</form>
